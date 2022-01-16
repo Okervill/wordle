@@ -1,9 +1,11 @@
 const fs = require('fs');
 
+//File taken from https://github.com/dwyl/english-words and modified
 let words = fs.readFileSync('./five-letter-words.txt', 'utf8');
+
 console.log(`Total word count: ${words.split('\n').length}`)
 
-//Enter letters which do not appear anywhere in the word
+//Enter letters which do not appear anywhere in the word    
 wrongletters = '';
 
 //Enter letters which are correct, but do not appear in this position
