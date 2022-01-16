@@ -6,23 +6,23 @@ let words = fs.readFileSync('./five-letter-words.txt', 'utf8');
 console.log(`Total word count: ${words.split('\n').length}`)
 
 //Enter letters which do not appear anywhere in the word    
-wrongletters = 'lidrotun';
+wrongletters = 'lgtmuthnease\r\n';
 
 //Enter letters which are correct, but do not appear in this position
-wrongpos1 = 'sa';
-wrongpos2 = 'ea';
-wrongpos3 = 'a';
-wrongpos4 = 'e';
-wrongpos5 = 'es';
+wrongpos1 = 'o';
+wrongpos2 = 'io';
+wrongpos3 = 'ir';
+wrongpos4 = 'ov';
+wrongpos5 = 'r';
 
 //Enter letters which are correct, and appear in this position
 correctpos1 = '';
-correctpos2 = 's';
-correctpos3 = '';
+correctpos2 = '';
+correctpos3 = 'o';
 correctpos4 = '';
-correctpos5 = '';
+correctpos5 = 'y';
  
-let regex = new RegExp(`${correctpos1.length === 1 ? correctpos1 : '[^' + wrongletters + wrongpos1 + ']'}${correctpos2.length === 1 ? correctpos2 : '[^' + wrongletters + wrongpos2 + ']'}${correctpos3.length === 1 ? correctpos3 : '[^' + wrongletters + wrongpos3 + ']'}${correctpos4.length === 1 ? correctpos4 : '[^' + wrongletters + wrongpos4 + ']'}${correctpos5.length === 1 ? correctpos5 : '[^' + wrongletters + wrongpos5 + ']'}\n`, 'g')
+let regex = new RegExp(`${correctpos1.length === 1 ? correctpos1 : '[^' + wrongletters + wrongpos1 + ']'}${correctpos2.length === 1 ? correctpos2 : '[^' + wrongletters + wrongpos2 + ']'}${correctpos3.length === 1 ? correctpos3 : '[^' + wrongletters + wrongpos3 + ']'}${correctpos4.length === 1 ? correctpos4 : '[^' + wrongletters + wrongpos4 + ']'}${correctpos5.length === 1 ? correctpos5 : '[^' + wrongletters + wrongpos5 + ']'}`, 'g')
 
 let matches = words.match(regex);
 console.log(matches, matches.length);
@@ -72,9 +72,12 @@ sortable.sort(function(a, b) {
     return b[1] - a[1];
 });
 
-let top5 = sortable[0][0] + sortable[1][0] + sortable[2][0] + sortable[3][0] + sortable[4][0];
+let top5 = sortable[0][0] + sortable[1][0] + sortable[2][0] + sortable[3][0] + sortable[4][0] + sortable[5][0] + sortable[6][0] + sortable[7][0];
 
-regex = new RegExp(`[${top5}]{5}`, 'g');
-let topmatches = words.match(regex);
+topregex = new RegExp(`[${top5}]{5}`, 'g');
+let topmatches = words.match(topregex);
+
+topmatches = topmatches.join('\n').match(regex);
+
 
 console.log(topmatches);
