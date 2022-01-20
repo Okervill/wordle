@@ -9,3 +9,5 @@ Once a back-end server is created, it will host a small database of game links a
 
 
 This can be ran using **npm start**
+
+Available at http://okker.io/wordle
