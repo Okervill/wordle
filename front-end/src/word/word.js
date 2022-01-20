@@ -36,7 +36,7 @@ class Word extends Component {
         for (let letter in word) {
             if (tmpSecret.indexOf(word[letter]) >= 0) {
                 yellowLetters.push(parseInt(letter));
-                tmpSecret.splice(letter, 1, '');
+                tmpSecret.splice(tmpSecret.indexOf(word[letter]), 1, '');
             }
         }
 
