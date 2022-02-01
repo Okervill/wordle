@@ -1,10 +1,29 @@
-const createError = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 var http = require('http');
+const CronJob = require('cron').CronJob;
+const sqlite = require('sqlite3').verbose();
+const db = new sqlite.Database('./files/storage.db');
+const moment = require('moment');
+
+//Set up cron job to get a new daily word each day at midnight
+let job = new CronJob('0 0 * * *', () => {
+    //get ranNum between 1 and 12971
+    let min = 1;
+    let max = 12971;
+    let randomRow = Math.floor(Math.random() * (max - min + 1) + min);
+    let query = 'SELECT * FROM ( SELECT ROW_NUMBER () OVER (ORDER BY word ) RowNum, word, uuid FROM words WHERE dateused IS NULL) t WHERE RowNum = ?';
+    db.get(query, [randomRow], (err, row) => {
+        if (err) return console.log(err);
+        let updateQuery = 'UPDATE words SET dateused = ? WHERE word = ?';
+        db.run(updateQuery, [moment().format('YYYYMMDD'), row.word], function (err) {
+            if (err) console.log(err);
+        });
+    });
+}, null, false, 'Europe/London');
 
 const indexRouter = require('./routes/index');
 
@@ -19,11 +38,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', indexRouter);
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
-});
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -40,3 +54,6 @@ app.use(function (err, req, res, next) {
 const server = http.createServer(app);
 server.listen(3005)
 console.log(`Server now listening on http://localhost:3000`);
+//Start cron job
+job.start()
+

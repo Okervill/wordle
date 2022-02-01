@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 const sqlite = require('sqlite3').verbose();
 const db = new sqlite.Database('./files/storage.db');
+const moment = require('moment');
 
 router.get('/', (req, res, next) => {
     res.redirect('http://okker.io/wordle');
@@ -43,7 +44,42 @@ router.get('/word/:word', async (req, res) => {
     }
 });
 
+router.get('/daily/all', async (req, res) => {
+    let allDailies = await getAllDailyWords()
+        .catch(err => {
+            return res.send({ error: err });
+        });
+    return res.send({ dailyWords: allDailies });
+});
+
+router.get('/daily/:date', async (req, res) => {
+    let date = req.params.date;
+    if (!moment(date, 'YYYYMMDD', true).isValid()) {
+        return res.send({ date, error: 'Invalid date format' });
+    }
+    let wordForDate = await getDailyWord(date)
+        .catch(err => {
+            return res.send({ date: date, error: err });
+        });
+    if (!wordForDate) {
+        return res.send({ date: date, error: 'Date has no associated word' });
+    } else {
+        return res.send({ ...wordForDate});
+    }
+});
+
 module.exports = router;
+
+function getDailyWord(date) {
+    let query = 'SELECT * FROM words WHERE dateused = ?';
+    return new Promise((resolve, reject) => {
+        db.get(query, [date], (err, row) => {
+            if (err) return reject(err);
+            if (!row) return resolve(false);
+            return resolve(row);
+        });
+    });
+}
 
 function wordExists(word) {
     let query = 'SELECT word FROM words WHERE word = ?';
@@ -80,4 +116,15 @@ function getRandom() {
             return resolve(row);
         })
     })
+}
+
+function getAllDailyWords() {
+    let query = 'SELECT * FROM words WHERE dateused IS NOT NULL ORDER BY dateused DESC';
+    return new Promise((resolve, reject) => {
+        db.all(query, (err, rows) => {
+            if (err) return reject(err);
+            if (rows.length === 0) return resolve(false);
+            return resolve(rows);
+        });
+    });
 }
