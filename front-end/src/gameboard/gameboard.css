@@ -9,8 +9,8 @@
     margin: 0 auto;
 }
 
-.words.wrongWord {
-    animation: shake 0.5s infinite;;
+.fakeWord {
+    animation: shake 0.5s normal forwards ease-in-out;
 }
 
 @keyframes shake {
@@ -18,18 +18,25 @@
         transform: translate(0);
     }
     20% {
-        transform: translate(3em);
+        transform: translate(2em);
     }
     40% {
-        transform: translate(-3em);
+        transform: translate(-2em);
     }
     60% {
-        transform: translate(3em);
+        transform: translate(2em);
     }
     80% {
-        transform: translate(-3em);
+        transform: translate(-2em);
     }
     100% {
         transform: translate(0);
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .words {
+        width: 50%;
+        margin: 0 auto;
     }
 }

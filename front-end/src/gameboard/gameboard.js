@@ -20,7 +20,8 @@ class GameBoard extends Component {
             gameover: false,
             secret: this.props.secret ? this.props.secret : '',
             saveDisabled: true,
-            started: this.props.secret ? true : false
+            started: this.props.secret ? true : false,
+            notAWord: false
         }
     }
 
@@ -85,10 +86,10 @@ class GameBoard extends Component {
                 console.error(err);
             });
 
-        console.log(exists);
-
         if (!exists) {
-            return console.log('fake word')
+            return this.setState({ notAWord: true });
+        } else {
+            this.setState({ notAWord: false });
         }
 
         //Update used letters, in word / in position
@@ -146,8 +147,8 @@ class GameBoard extends Component {
 
     render() {
 
-        const { guessedWords, currentLetters, message, usedLetters, yellowLetters, greenLetters, secret, saveDisabled, started } = this.state;
-
+        const { guessedWords, currentLetters, message, usedLetters, yellowLetters, greenLetters, secret, saveDisabled, started, notAWord } = this.state;
+        
         if (!secret || secret.length < 5 || !started) {
             return (
                 <div className='game'>
@@ -165,7 +166,7 @@ class GameBoard extends Component {
                     {guessedWords[3] ? <Word word={guessedWords[3]} secret={secret} /> : <Word secret={secret} />}
                     {guessedWords[4] ? <Word word={guessedWords[4]} secret={secret} /> : <Word secret={secret} />}
                     {guessedWords[5] ? <Word word={guessedWords[5]} secret={secret} /> : <Word secret={secret} />}
-                    <Guess currentLetters={currentLetters} />
+                    <Guess currentLetters={currentLetters} notAWord={notAWord} />
                 </div>
 
                 <Keyboard input={this.inputLetter} backspace={this.backspace} enter={this.enter} usedLetters={usedLetters} yellowLetters={yellowLetters} greenLetters={greenLetters} />

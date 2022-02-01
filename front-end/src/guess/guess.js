@@ -9,12 +9,13 @@ class Guess extends Component {
             currentLetters: this.props.currentLetters
         }
     }
-
+    
     render() {
         const { currentLetters } = this.state;
+        const { notAWord } = this.props;
 
         return (
-            <div className='word input'>
+            <div className={`word input ${notAWord ? 'fakeWord' : ''}`}>
                 <Letter letter={currentLetters[0] ? currentLetters[0] : null} guessInput={true} />
                 <Letter letter={currentLetters[1] ? currentLetters[1] : null} guessInput={true} />
                 <Letter letter={currentLetters[2] ? currentLetters[2] : null} guessInput={true} />

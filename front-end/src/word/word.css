@@ -1,11 +1,19 @@
 .word {
     display: flex;
-    width: 225px;
+    width: 350px;
     
-    width: 50%;
     margin: 0 auto;
 }
 
 .input {
     background-color: grey;
+}
+
+@media only screen and (max-width: 768px) {
+    .word {
+        display: flex;
+        width: 200px;
+        
+        margin: 0 auto;
+    }
 }
