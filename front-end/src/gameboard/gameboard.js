@@ -1,4 +1,5 @@
 import { Component } from 'react';
+
 import Word from '../word/word';
 import Guess from '../guess/guess';
 import Keyboard from '../keyboard/keyboard';
@@ -23,10 +24,17 @@ class GameBoard extends Component {
         }
     }
 
-    componentDidMount() {
-        this.setState({ 
-            secret: this.props.secret ? this.props.secret : '' ,
-            started: this.props.secret ? true : false
+    async componentDidMount() {
+        let pathname = window.location.pathname;
+        let wordUid = '';
+        if (pathname.split('/').length === 3) {
+            wordUid = window.location.pathname.split('/')[2];
+        }
+        let { word } = await getWordFromPath(wordUid);
+        if (word.length !== 5) return;
+        this.setState({
+            secret: word.toUpperCase(),
+            started: true
         });
     }
 
@@ -47,14 +55,40 @@ class GameBoard extends Component {
         }
     }
 
-    enter = () => {
-        const { currentLetters, guessedWords, usedLetters, yellowLetters, greenLetters } = this.state;
+
+    wordExists(word) {
+        return new Promise(async (resolve, reject) => {
+            fetch(`http://80.85.85.72:3005/word/${word}`)
+                .then(res => res.json())
+                .then(res => {
+                    return resolve(res);
+                })
+                .catch(err => {
+                    return reject(err)
+                });
+        });
+    }
+
+    enter = async () => {
+        const { currentLetters, guessedWords, usedLetters, yellowLetters, greenLetters, secret } = this.state;
         if (currentLetters.length !== 5) return;
         let currentWord = currentLetters.join('');
 
         //word already guessed
         if (guessedWords.indexOf(currentWord) !== -1) {
             return;
+        }
+
+        //Check if word exists
+        let wordExists = await this.wordExists(currentWord.toLowerCase())
+            .catch(err => {
+                console.error(err);
+            });
+
+        if(!wordExists) {
+            console.log('fake word')
+        } else {
+            console.log('real word')
         }
 
         //Update used letters, in word / in position
@@ -81,7 +115,7 @@ class GameBoard extends Component {
 
         //Check if it's the final guess
         if (guessedWords.length === 6) {
-            this.setState({ message: 'Game Over!', gameover: true });
+            this.setState({ message: `Game Over! The word was ${secret}`, gameover: true });
         }
     }
 
@@ -113,7 +147,7 @@ class GameBoard extends Component {
     render() {
 
         const { guessedWords, currentLetters, message, usedLetters, yellowLetters, greenLetters, secret, saveDisabled, started } = this.state;
-        
+
         if (!secret || secret.length < 5 || !started) {
             return (
                 <div className='game'>
@@ -140,6 +174,19 @@ class GameBoard extends Component {
             </div>
         );
     }
+}
+
+function getWordFromPath(uid) {
+    return new Promise(async (resolve, reject) => {
+        fetch(`http://80.85.85.72:3005/game/${uid}`)
+            .then(res => res.json())
+            .then(res => {
+                return resolve(res);
+            })
+            .catch(err => {
+                return reject(err)
+            });
+    });
 }
 
 export default GameBoard;

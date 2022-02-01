@@ -27,13 +27,37 @@ router.get('/game/:gameid', async (req, res) => {
     if (!gameWord) {
         res.send({ error: 'Unknown game id' });
     }
-    return res.send({ word: gameWord.word });
+    return res.send({ word: gameWord.word, uuid: gameWord.uuid });
+});
+
+router.get('/word/:word', async (req, res) => {
+    let word = req.params.word;
+    let exists = await wordExists(word)
+        .catch(err => {
+            return res.send({ exists: true, word: word, error: err });
+        });
+    if (!exists) {
+        return res.send({ exists: false, word: word });
+    } else {
+        return res.send({ exists: true, word: word });
+    }
 });
 
 module.exports = router;
 
+function wordExists(word) {
+    let query = 'SELECT word FROM words WHERE word = ?';
+    return new Promise((resolve, reject) => {
+        db.get(query, [word], (err, row) => {
+            if (err) return reject(err);
+            if (!row) return resolve(false);
+            return resolve(true);
+        });
+    });
+}
+
 function getWord(gameid) {
-    let query = 'SELECT word FROM words WHERE uuid = ?';
+    let query = 'SELECT word, uuid FROM words WHERE uuid = ?';
     return new Promise((resolve, reject) => {
         db.get(query, [gameid], (err, row) => {
             if (err) return reject(err);
