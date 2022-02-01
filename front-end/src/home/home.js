@@ -39,7 +39,7 @@ export default Home;
 
 function getDailyWords() {
     return new Promise((resolve, reject) => {
-        fetch('http://localhost:3005/daily/all')
+        fetch('http://80.85.85.72:3005/daily/all')
             .then(res => res.json())
             .then(res => {
                 return resolve(res);
