@@ -1,11 +1,10 @@
 .game {
-
     text-align: center;
     vertical-align: middle;
 }
 
 .words {
-    width: 50%;
+    width: 75%;
     margin: 0 auto;
 }
 
@@ -36,7 +35,7 @@
 
 @media only screen and (max-width: 768px) {
     .words {
-        width: 50%;
+        width: 75%;
         margin: 0 auto;
     }
 }

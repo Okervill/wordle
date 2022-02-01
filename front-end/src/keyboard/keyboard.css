@@ -3,10 +3,9 @@
     flex-direction: column;
     align-items: center;
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 0;
     right: 0;
-    
 }
 
 .row {
@@ -42,11 +41,11 @@
 
 @media only screen and (max-width: 768px) {
     .key {
-        width: 10px;
-        height: 10px;
-        line-height: 10px;
+        width: 15px;
+        height: 30px;
+        line-height: 30px;
 
-        font-size: 0.7em;
+        font-size: 1em;
     
         margin: 5px;
         padding: 5px;
@@ -56,5 +55,6 @@
     }
     .key.larger {
         width: 25px;
+        font-size: 0.7em;
     }
 }
