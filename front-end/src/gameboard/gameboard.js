@@ -80,15 +80,15 @@ class GameBoard extends Component {
         }
 
         //Check if word exists
-        let wordExists = await this.wordExists(currentWord.toLowerCase())
+        let { exists } = await this.wordExists(currentWord.toLowerCase())
             .catch(err => {
                 console.error(err);
             });
 
-        if(!wordExists) {
-            console.log('fake word')
-        } else {
-            console.log('real word')
+        console.log(exists);
+
+        if (!exists) {
+            return console.log('fake word')
         }
 
         //Update used letters, in word / in position
