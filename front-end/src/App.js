@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 
 import Home from './home/home';
-import Game from './game/game';
 import GameBoard from './gameboard/gameboard';
 
 import './App.css';
@@ -23,14 +22,10 @@ function App() {
               <li>
                 <Link to="/">Home</Link>
               </li>
-              <li>
-                <Link to="/game">Game</Link>
-              </li>
             </ul>
           </nav>
 
           <Routes>
-            <Route path="/game" element={<Game />} component={Game} />
             <Route path="/game/:id" element={<GameBoard />} component={GameBoard} />
             <Route exact path="/" element={<Home />} component={Home} />
           </Routes>
