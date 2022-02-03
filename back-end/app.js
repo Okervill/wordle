@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const logger = require('morgan');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 var http = require('http');
 const CronJob = require('cron').CronJob;
@@ -31,8 +31,20 @@ const indexRouter = require('./routes/index');
 const app = express();
 
 app.set('view engine', 'jade');
+app.set('trust proxy', true);
 
-app.use(logger('dev'));
+//Set up lgger
+app.use(morgan(function (tokens, req, res) {
+    return [
+        req.ip,
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms'
+    ].join(' ')
+}));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
