@@ -1,0 +1,45 @@
+.end-game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 15em; 
+    width: 25em;
+    font-size: 30px;
+
+    background-color: rgb(197, 197, 197);
+
+    border-radius: 1em;    
+    border: 2px black solid;
+
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.end-game-items {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.end-game-share {
+    white-space: pre;
+
+}
+
+.end-game-share-button {
+    font-size: 25px;
+    height: 2em;
+    width: 4em;
+}
+
+.end-game-close-button-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: larger;
+    height: 2em;
+    width: 2em;
+}
