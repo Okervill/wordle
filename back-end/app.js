@@ -8,6 +8,7 @@ const CronJob = require('cron').CronJob;
 const sqlite = require('sqlite3').verbose();
 const db = new sqlite.Database('./files/storage.db');
 const moment = require('moment');
+const port = 3005;
 
 //Set up cron job to get a new daily word each day at midnight
 let job = new CronJob('0 0 * * *', () => {
@@ -52,8 +53,8 @@ app.use(function (err, req, res, next) {
 });
 
 const server = http.createServer(app);
-server.listen(3005)
-console.log(`Server now listening on http://localhost:3000`);
+server.listen(port);
+console.log(`Server now listening on http://localhost:${port}`);
 //Start cron job
 job.start()
 

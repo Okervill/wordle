@@ -4,7 +4,7 @@
 }
 
 .words {
-    width: 75%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -30,12 +30,5 @@
     }
     100% {
         transform: translate(0);
-    }
-}
-
-@media only screen and (max-width: 768px) {
-    .words {
-        width: 75%;
-        margin: 0 auto;
     }
 }

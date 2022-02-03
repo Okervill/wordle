@@ -1,6 +1,6 @@
 .word {
     display: flex;
-    width: 475px;
+    width: 50em;
     
     margin: 0 auto;
 }
@@ -9,9 +9,14 @@
     background-color: grey;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 875px), (max-height: 900px) {
     .word {
-        display: flex;
-        width: 275px;
+        width: 40em;
+    }
+}
+
+@media only screen and (max-width: 675px), (max-height: 770px) {
+    .word {
+        width: 30em;
     }
 }
