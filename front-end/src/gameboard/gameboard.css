@@ -12,6 +12,14 @@
     animation: shake 0.5s normal forwards ease-in-out;
 }
 
+.spin {
+    animation: rotate 2s normal forwards cubic-bezier(0.21, 0.24, 0.6, 1.4);
+} 
+
+.jump {
+    animation: jump 2s normal forwards ease-in-out;
+} 
+
 @keyframes shake {
     0% {
         transform: translate(0);
@@ -30,5 +38,38 @@
     }
     100% {
         transform: translate(0);
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes jump {
+    0% {
+        transform: translateY(0em);
+    }
+    15% {
+        transform: translateY(-4em);
+    }
+    30% {
+        transform: translateY(0em);
+    }
+    45% {
+        transform: translateY(-2em);
+    }
+    60% {
+        transform: translateY(0em);
+    }
+    80% {
+        transform: translateY(-1em);
+    }
+    100% {
+        transform: translateY(0em);
     }
 }

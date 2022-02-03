@@ -21,7 +21,9 @@ class GameBoard extends Component {
             secret: this.props.secret ? this.props.secret : '',
             saveDisabled: true,
             started: this.props.secret ? true : false,
-            notAWord: false
+            notAWord: false,
+            spin: false,
+            jump: false
         }
     }
 
@@ -52,7 +54,7 @@ class GameBoard extends Component {
         const { currentLetters } = this.state;
         if (currentLetters.length > 0) {
             currentLetters.pop();
-            this.setState({ currentLetters });
+            this.setState({ currentLetters, notAWord: false, spin: false, jump: false });
         }
     }
 
@@ -92,25 +94,35 @@ class GameBoard extends Component {
             this.setState({ notAWord: false });
         }
 
+        if (currentWord === 'SPINS') {
+            this.setState({ spin: true });
+        } else if (currentWord === 'JUMPS') {
+            this.setState({ jump: true });
+        }
+
+        currentLetters.splice(0, 5);
+        this.setState({ currentLetters });
+
+        let lettersPlaceHolder = currentLetters;
+
         //Update used letters, in word / in position
-        for (let letter in currentLetters) {
+        for (let letter in lettersPlaceHolder) {
             if (currentWord[letter] === this.state.secret[letter]) {
                 greenLetters.push(currentWord[letter]);
             } else if (this.state.secret.indexOf(currentWord[letter]) >= 0) {
                 yellowLetters.push(currentWord[letter]);
             } else {
-                usedLetters.push(...currentLetters);
+                usedLetters.push(...lettersPlaceHolder);
             }
         }
         this.setState({ usedLetters, yellowLetters, greenLetters });
 
         //Add new word to guessed history and reset the guessing row
         guessedWords.push(currentWord);
-        currentLetters.splice(0, 5);
-        this.setState({ guessedWords, currentLetters });
+        this.setState({ guessedWords });
 
         //Check if it's the correct word
-        if (guessedWords[guessedWords.length - 1] === this.state.secret) {
+        if (guessedWords[guessedWords.length - 1] === secret) {
             this.setState({ message: 'You got it!', gameover: true });
         }
 
@@ -147,8 +159,8 @@ class GameBoard extends Component {
 
     render() {
 
-        const { guessedWords, currentLetters, message, usedLetters, yellowLetters, greenLetters, secret, saveDisabled, started, notAWord } = this.state;
-        
+        const { guessedWords, currentLetters, message, usedLetters, yellowLetters, greenLetters, secret, saveDisabled, started, notAWord, spin, jump } = this.state;
+
         if (!secret || secret.length < 5 || !started) {
             return (
                 <div className='game'>
@@ -159,7 +171,7 @@ class GameBoard extends Component {
         }
         return (
             <div className='game' onKeyDown={this.onKeyPress} tabIndex={-1}>
-                <div className='words'>
+                <div className={`words ${spin === true ? 'spin' : jump === true ? 'jump' : ''}`}>
                     {guessedWords[0] ? <Word word={guessedWords[0]} secret={secret} /> : <Word secret={secret} />}
                     {guessedWords[1] ? <Word word={guessedWords[1]} secret={secret} /> : <Word secret={secret} />}
                     {guessedWords[2] ? <Word word={guessedWords[2]} secret={secret} /> : <Word secret={secret} />}
