@@ -43,6 +43,8 @@ class GameBoard extends Component {
             secret: word.toUpperCase(),
             started: true
         });
+
+        this.gameContainer.focus();
     }
 
     toggleDisplayEnd = () => {
@@ -98,8 +100,6 @@ class GameBoard extends Component {
 
         if (!exists) {
             return this.setState({ notAWord: true });
-        } else {
-            this.setState({ notAWord: false });
         }
 
         if (currentWord === 'SPINS') {
@@ -108,30 +108,18 @@ class GameBoard extends Component {
             this.setState({ jump: true });
         }
 
-        currentLetters.splice(0, 5);
-        this.setState({ currentLetters });
-
-        shareable.push([]);
-
-        //Update used letters, in word / in position
-        for (let letter in currentWord) {
-            if (currentWord[letter] === secret[letter]) {
-                greenLetters.push(currentWord[letter]);
-                shareable[guessedWords.length].push('green');
-            } else if (this.state.secret.indexOf(currentWord[letter]) >= 0) {
-                yellowLetters.push(currentWord[letter]);
-                shareable[guessedWords.length].push('yellow');
-            } else {
-                usedLetters.push(...currentWord);
-                shareable[guessedWords.length].push('grey');
-            }
-        }
-
-        this.setState({ usedLetters, yellowLetters, greenLetters, shareable });
-
-        //Add new word to guessed history and reset the guessing row
         guessedWords.push(currentWord);
-        this.setState({ guessedWords });
+        currentLetters.splice(0, 5);
+        currentWord = currentWord.split('');
+
+        let guessScore = scoreGuess(secret, currentWord);
+        greenLetters.push(...guessScore.greenLetters);
+        yellowLetters.push(...guessScore.yellowLetters);
+        usedLetters.push(...guessScore.greyLetters);
+
+        shareable.push(guessScore.emojiRow);
+
+        this.setState({ usedLetters, yellowLetters, greenLetters, shareable, currentLetters, guessedWords });
 
         //Check if it's the correct word
         if (guessedWords[guessedWords.length - 1] === secret) {
@@ -184,7 +172,7 @@ class GameBoard extends Component {
             )
         }
         return (
-            <div className='game' onKeyDown={this.onKeyPress} tabIndex={-1}>
+            <div className='game' onKeyDown={this.onKeyPress} tabIndex={-1} ref={(gameContainer) => { this.gameContainer = gameContainer; }}>
                 <div className={`words ${spin === true ? 'spin' : jump === true ? 'jump' : ''}`}>
                     {guessedWords[0] ? <Word word={guessedWords[0]} shareable={shareable[0]} /> : <Word />}
                     {guessedWords[1] ? <Word word={guessedWords[1]} shareable={shareable[1]} /> : <Word />}
@@ -194,7 +182,6 @@ class GameBoard extends Component {
                     {guessedWords[5] ? <Word word={guessedWords[5]} shareable={shareable[5]} /> : <Word />}
                     <Guess currentLetters={currentLetters} notAWord={notAWord} />
                 </div>
-
                 <Keyboard input={this.inputLetter} backspace={this.backspace} enter={this.enter} usedLetters={usedLetters} yellowLetters={yellowLetters} greenLetters={greenLetters} />
 
                 {gameover ? <EndGame win={win} guesses={guessedWords} secret={secret} shareable={shareable} displayEnd={displayEnd} toggleDisplayEnd={this.toggleDisplayEnd} /> : null}
@@ -218,3 +205,48 @@ function getWordFromPath(uid) {
 }
 
 export default GameBoard;
+
+function scoreGuess(secret, guess) {
+    secret = secret.split('');
+
+    let greenLetters = [];
+    let yellowLetters = [];
+    let greyLetters = [];
+    let emojiRow = ['', '', '', '', ''];
+
+    //Get Greens
+    for (let letter in guess) {
+        if (guess[letter] === secret[letter]) {
+            //Save as green
+            greenLetters.push(guess[letter]);
+            //Remove used letter
+            secret.splice(letter, 1, '');
+            guess.splice(letter, 1, '');
+            //Add to emoji row
+            emojiRow[letter] = 'green';
+        }
+    }
+    //Get Yellows
+    for (let letter in guess) {
+        if (guess[letter] === '') continue;
+        if (secret.indexOf(guess[letter]) >= 0) {
+            //Save as yellow
+            yellowLetters.push(guess[letter]);
+            //Remove used letter
+            secret.splice(secret.indexOf(guess[letter]), 1, '');
+            guess.splice(letter, 1, '')
+            //Add to emoji row
+            emojiRow[letter] = 'yellow';
+        }
+    }
+    //Get Grey
+    for (let letter in guess) {
+        if (guess[letter] === '') continue;
+        //Any remaining letters are grey;
+        greyLetters.push(guess[letter]);
+        //Add to emoji row
+        emojiRow[letter] = 'grey';
+    }
+
+    return { greenLetters, yellowLetters, greyLetters, emojiRow };
+}

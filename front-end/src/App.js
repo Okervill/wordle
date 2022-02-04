@@ -24,12 +24,12 @@ function App() {
               </li>
             </ul>
           </nav>
-
-          <Routes>
-            <Route path="/game/:id" element={<GameBoard />} component={GameBoard} />
-            <Route exact path="/" element={<Home />} component={Home} />
-          </Routes>
         </div>
+        
+        <Routes>
+          <Route path="/game/:id" element={<GameBoard />} component={GameBoard} />
+          <Route exact path="/" element={<Home />} component={Home} />
+        </Routes>
       </Router>
     </div>
   );

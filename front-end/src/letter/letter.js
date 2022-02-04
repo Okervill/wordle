@@ -7,7 +7,7 @@ class Letter extends Component {
         const { letter, green, yellow, grey, guessInput } = this.props;
         if (guessInput) {
             return (
-                <div className={'letter'}>
+                <div className={'letter guess'}>
                     {letter}
                 </div>
             )
