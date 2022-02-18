@@ -19,6 +19,26 @@ class EndGame extends Component {
         window.getSelection().removeAllRanges();// to deselect
     }
 
+    componentDidMount() {
+        const { win, guesses } = this.props;
+        let played = JSON.parse(localStorage.getItem('played'));
+        let link = window.location.pathname.split('/')[2];
+        if (!played) {
+            played = [{
+                link: link,
+                guesses: guesses.length,
+                win: win
+            }];
+        } else if (!played.find(x => x.link === link)) {
+            played.push({
+                link: link,
+                guesses: guesses.length,
+                win: win
+            })
+        }
+        localStorage.setItem('played', JSON.stringify(played));
+    }
+
     render() {
         const { win, secret, shareable, displayEnd, guesses } = this.props;
 

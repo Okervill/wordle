@@ -9,7 +9,8 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dailyWords: []
+            dailyWords: [],
+            played: []
         }
     }
 
@@ -22,7 +23,9 @@ class Home extends Component {
             .catch(err => {
                 console.log(err);
             });
-        this.setState({ ...dailyWords });
+
+        let played = JSON.parse(localStorage.getItem('played'));
+        this.setState({ ...dailyWords, played });
     }
 
     // handleCookie = () => {
@@ -52,7 +55,7 @@ class Home extends Component {
     }
 
     render() {
-        const { dailyWords } = this.state;
+        const { dailyWords, played } = this.state;
         if (dailyWords.length === 0) {
             return (<>Nothing found</>)
         } else {
@@ -75,8 +78,8 @@ class Home extends Component {
                                 return (
                                     <tr className='daily-puzzles-table-content-row' key={index}>
                                         <td className='daily-puzzles-table-content-cell'><a href={`/game/${wordInfo.uuid}`}>Day {dailyWords.length - index} - {moment(wordInfo.dateused, 'YYYYMMDD', true).format('Do MMM YYYY')}</a></td>
-                                        <td className='daily-puzzles-table-content-cell'></td>
-                                        <td className='daily-puzzles-table-content-cell'></td>
+                                        <td className='daily-puzzles-table-content-cell'>{played.find(x => x.link === wordInfo.uuid) ? `${played.find(x => x.link === wordInfo.uuid).guesses} / 6` : null}</td>
+                                        <td className='daily-puzzles-table-content-cell'>{played.find(x => x.link === wordInfo.uuid) ? `${played.find(x => x.link === wordInfo.uuid).win}` : null}</td>
                                     </tr>
                                 )
                             })}
