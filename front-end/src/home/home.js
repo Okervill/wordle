@@ -78,8 +78,8 @@ class Home extends Component {
                                 return (
                                     <tr className='daily-puzzles-table-content-row' key={index}>
                                         <td className='daily-puzzles-table-content-cell'><a href={`/game/${wordInfo.uuid}`}>Day {dailyWords.length - index} - {moment(wordInfo.dateused, 'YYYYMMDD', true).format('Do MMM YYYY')}</a></td>
-                                        <td className='daily-puzzles-table-content-cell'>{played.find(x => x.link === wordInfo.uuid) ? `${played.find(x => x.link === wordInfo.uuid).guesses} / 6` : null}</td>
-                                        <td className='daily-puzzles-table-content-cell'>{played.find(x => x.link === wordInfo.uuid) ? `${played.find(x => x.link === wordInfo.uuid).win}` : null}</td>
+                                        <td className='daily-puzzles-table-content-cell'>{played.length >= 1 && played.find(x => x.link === wordInfo.uuid) ? `${played.find(x => x.link === wordInfo.uuid).guesses} / 6` : null}</td>
+                                        <td className='daily-puzzles-table-content-cell'>{played.length >= 1 && played.find(x => x.link === wordInfo.uuid) ? `${played.find(x => x.link === wordInfo.uuid).win}` : null}</td>
                                     </tr>
                                 )
                             })}
