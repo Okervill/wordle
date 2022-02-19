@@ -6,7 +6,7 @@ const db = new sqlite.Database('./files/storage.db');
 const moment = require('moment');
 
 router.get('/', (req, res, next) => {
-    res.redirect('http://okker.io/wordle');
+    res.redirect('http://wordle.okker.io/');
 });
 
 router.get('/game/random', async (req, res) => {
@@ -26,8 +26,9 @@ router.get('/game/:gameid', async (req, res) => {
             res.send({ error: 'Something went wrong' });
         });
     if (!gameWord) {
-        res.send({ error: 'Unknown game id' });
+        return res.send({ error: 'Unknown game id' });
     }
+    
     return res.send({ word: gameWord.word, uuid: gameWord.uuid });
 });
 
