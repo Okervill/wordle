@@ -12,15 +12,16 @@ const port = 3005;
 
 //Set up cron job to get a new daily word each day at midnight
 let job = new CronJob('0 0 * * *', () => {
-    //get ranNum between 1 and 12971
-    let min = 1;
-    let max = 12971;
-    let randomRow = Math.floor(Math.random() * (max - min + 1) + min);
-    let query = 'SELECT * FROM ( SELECT ROW_NUMBER () OVER (ORDER BY word ) RowNum, word, uuid FROM words WHERE dateused IS NULL) t WHERE RowNum = ?';
-    db.get(query, [randomRow], (err, row) => {
-        if (err) return console.log(err);
+    let query = 'SELECT * FROM words';
+    db.all(query, (err, rows) => {
+        if (err) return console.error(err);
+        let min = 0;
+        let max = rows.length;
+        let random = Math.floor(Math.random() * (max - min + 1) + min);
+        let rowToUpdate = rows[random];
+
         let updateQuery = 'UPDATE words SET dateused = ? WHERE word = ?';
-        db.run(updateQuery, [moment().format('YYYYMMDD'), row.word], function (err) {
+        db.run(updateQuery, [moment().format('YYYYMMDD'), rowToUpdate.word], function (err) {
             if (err) console.log(err);
         });
     });
