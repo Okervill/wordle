@@ -12,7 +12,7 @@ const port = 3005;
 
 //Set up cron job to get a new daily word each day at midnight
 let job = new CronJob('0 0 * * *', () => {
-    let query = 'SELECT * FROM words';
+    let query = 'SELECT * FROM words WHERE dateused IS NULL';
     db.all(query, (err, rows) => {
         if (err) return console.error(err);
         let min = 0;
